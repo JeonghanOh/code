@@ -1,6 +1,6 @@
 /*
-    maximum-weighted matching algorithm : Hungarian method ÀÔ´Ï´Ù.
-    ½Ã°£º¹Àâµµ : O(n^3)
+    maximum-weighted matching algorithm : Hungarian method ì…ë‹ˆë‹¤.
+    ì‹œê°„ë³µì¡ë„ : O(n^3)
 */
 
 #include <cstdio>
@@ -49,7 +49,7 @@ struct HungarianAlgorithm{
     }
 
     bool isNS_equal_T(){
-        // SÁıÇÕÀÇ ÀÌ¿ô ³ëµåµéÀ» ¸ğµÎ Ã£´Â´Ù.
+        // Sì§‘í•©ì˜ ì´ì›ƒ ë…¸ë“œë“¤ì„ ëª¨ë‘ ì°¾ëŠ”ë‹¤.
         neighbor = vector <bool> (n + 1, false);
         for(int y = 1; y <= n; y++)
             if(slackY[y] == 0)
@@ -65,15 +65,15 @@ struct HungarianAlgorithm{
     void step1(){
         labelX.resize(n + 1, 0);
         labelY.resize(n + 1, 0);
-        // slackY´Â S¿¡ Æ÷ÇÔµÈ ¸ğµç x, ±×¸®°í ¸ğµç y¿¡ ´ëÇØ¼­ min{labelX[x] + labelY[y] - weight[x][y]} ¸¦ ¸¸Á·ÇÑ´Ù.
+        // slackYëŠ” Sì— í¬í•¨ëœ ëª¨ë“  x, ê·¸ë¦¬ê³  ëª¨ë“  yì— ëŒ€í•´ì„œ min{labelX[x] + labelY[y] - weight[x][y]} ë¥¼ ë§Œì¡±í•œë‹¤.
         slackY.resize(n + 1, INF);
 
-        // ¶óº§ ÃÊ±âÈ­
+        // ë¼ë²¨ ì´ˆê¸°í™”
         for(int x = 1; x <= n; x++)
             for(int y = 1; y <= n; y++)
                 labelX[x] = max(labelX[x], dat.weight[x][y]);
 
-        // ÃÊ±â ¸ÅÄª MÀ» ±¸ÇÑ´Ù.
+        // ì´ˆê¸° ë§¤ì¹­ Mì„ êµ¬í•œë‹¤.
         matchX.resize(n + 1, -1);
         matchY.resize(n + 1, -1);
         M = 0;
@@ -83,7 +83,7 @@ struct HungarianAlgorithm{
         }
     }
 
-    // augmenting path¸¦ Ã£´Â´Ù.
+    // augmenting pathë¥¼ ì°¾ëŠ”ë‹¤.
     bool augment(int x){
         if(visited[x])return false;
         visited[x] = true;
@@ -100,10 +100,10 @@ struct HungarianAlgorithm{
     }
 
     bool step2(){
-        // ÆÛÆåÆ® ¸ÅÄªÀÌ¸é ´Ü°èµéÀ» Á¾·áÇÑ´Ù.
+        // í¼í™íŠ¸ ë§¤ì¹­ì´ë©´ ë‹¨ê³„ë“¤ì„ ì¢…ë£Œí•œë‹¤.
         if(M == n)return true;
 
-        // S,T ÁıÇÕÀ» ÃÊ±âÈ­ ÇÑ´Ù. S ÁıÇÕ¿¡´Â free vertex¸¦ Áı¾î ³Ö°í ±×°ÍÀÌ Alternating treeÀÇ ·çÆ®°¡ µÈ´Ù.
+        // S,T ì§‘í•©ì„ ì´ˆê¸°í™” í•œë‹¤. S ì§‘í•©ì—ëŠ” free vertexë¥¼ ì§‘ì–´ ë„£ê³  ê·¸ê²ƒì´ Alternating treeì˜ ë£¨íŠ¸ê°€ ëœë‹¤.
         S = vector <bool> (n + 1, false);
         for(int x = 1; x <= n; x++)
             if(matchX[x] == -1){
@@ -114,7 +114,7 @@ struct HungarianAlgorithm{
 
         T = vector <bool> (n + 1, false);
 
-        // slackY °ªÀ» ÃÊ±âÈ­ ÇÑ´Ù.
+        // slackY ê°’ì„ ì´ˆê¸°í™” í•œë‹¤.
         for(int y = 1; y <= n; y++)
             slackY[y] = labelX[root] + labelY[y] - dat.weight[root][y];
 
@@ -125,22 +125,22 @@ struct HungarianAlgorithm{
     void step3(){
         int alpha = INF;
 
-        // T¿¡ ¼ÓÇÏÁö ¾ÊÀº Á¡µé Áß °¡Àå ÀÛÀº alpha°ªÀ» ±¸ÇÑ´Ù.
+        // Tì— ì†í•˜ì§€ ì•Šì€ ì ë“¤ ì¤‘ ê°€ì¥ ì‘ì€ alphaê°’ì„ êµ¬í•œë‹¤.
         for(int y = 1; y <= n; y++)
             if(!T[y])alpha = min(alpha, slackY[y]);
 
-        // S¿¡ ¼ÓÇÑ Á¡¿¡ ´ëÇØ¼­´Â alpha ¸¦ »©ÁØ´Ù.
+        // Sì— ì†í•œ ì ì— ëŒ€í•´ì„œëŠ” alpha ë¥¼ ë¹¼ì¤€ë‹¤.
         for(int x = 1; x <= n; x++)
             if(S[x])labelX[x] -= alpha;
 
-        // T¿¡ ¼ÓÇÏ´Â Á¡¿¡ ´ëÇØ¼­´Â alpha¸¦ ´õÇØÁÖ°í slackY¿¡´Â »©ÁØ´Ù.
+        // Tì— ì†í•˜ëŠ” ì ì— ëŒ€í•´ì„œëŠ” alphaë¥¼ ë”í•´ì£¼ê³  slackYì—ëŠ” ë¹¼ì¤€ë‹¤.
         for(int y = 1; y <= n; y++)
             if(T[y])labelY[y] += alpha;
             else slackY[y] -= alpha;
     }
 
     bool step4(){
-        // candY´Â T¿¡ ¼ÓÇÏÁö ¾ÊÀ¸¸é¼­ SÁıÇÕÀÇ ÀÌ¿ôÇÑ Á¡ÀÌ´Ù.
+        // candYëŠ” Tì— ì†í•˜ì§€ ì•Šìœ¼ë©´ì„œ Sì§‘í•©ì˜ ì´ì›ƒí•œ ì ì´ë‹¤.
         int candY;
         for(int y = 1; y <= n; y++)
             if(neighbor[y] && !T[y]){
@@ -148,14 +148,14 @@ struct HungarianAlgorithm{
                 break;
             }
 
-        // candY°¡ freeÇÏ´Ù¸é Áõ°¡°æ·Î¸¦ Ã£¾ÆÁÖ°í ´Ü°è4¸¦ ¸¶Ä¡°í ´Ü°è2·Î °£´Ù.
+        // candYê°€ freeí•˜ë‹¤ë©´ ì¦ê°€ê²½ë¡œë¥¼ ì°¾ì•„ì£¼ê³  ë‹¨ê³„4ë¥¼ ë§ˆì¹˜ê³  ë‹¨ê³„2ë¡œ ê°„ë‹¤.
         if(matchY[candY] == -1){
             visited = vector <bool> (n + 1, false);
             if(augment(root))M++;
             return true;
         }
 
-        // candY°¡ freeÇÏÁö ¾Ê´Ù¸é TÁıÇÕ¿¡ Æ÷ÇÔ½ÃÅ°°í ¸ÅÄªµÇ¾î ÀÖ´Â x°ªÀº SÁıÇÕ¿¡ Æ÷ÇÔ½ÃÅ²´Ù. ±×¸®°í slackY°ªÀ» ¾÷µ¥ÀÌÆ® ÇØÁØ´Ù.
+        // candYê°€ freeí•˜ì§€ ì•Šë‹¤ë©´ Tì§‘í•©ì— í¬í•¨ì‹œí‚¤ê³  ë§¤ì¹­ë˜ì–´ ìˆëŠ” xê°’ì€ Sì§‘í•©ì— í¬í•¨ì‹œí‚¨ë‹¤. ê·¸ë¦¬ê³  slackYê°’ì„ ì—…ë°ì´íŠ¸ í•´ì¤€ë‹¤.
         S[matchY[candY]] = true;
         T[candY] = true;
 
@@ -175,7 +175,6 @@ int main(){
 
     data dat(n);
 
-    int maxN = 0;
     for(int i = 1; i <= n; i++)
         for(int j = 1; j <= n; j++)
                 scanf("%d", &dat.weight[i][j]);
